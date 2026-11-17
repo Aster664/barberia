@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Dashboard', 'dashboard', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading">
+            <div><p class="eyebrow">Vista general</p><h1 class="page-title">Panel de control</h1><p class="page-description">El pulso de tu barbería, en un solo lugar.</p></div>
+            <a class="btn btn-primary" th:href="@{/citas/nuevo}"><span>＋</span>Nueva cita</a>
+        </div>
+        <section class="stat-grid" aria-label="Estadísticas del sistema">
+            <article class="card stat-card"><div class="stat-top"><span class="stat-label">Clientes</span><span class="stat-symbol">♙</span></div><strong class="stat-value" th:text="${totalClientes}">0</strong><span class="stat-foot">Registros disponibles</span></article>
+            <article class="card stat-card"><div class="stat-top"><span class="stat-label">Barberos</span><span class="stat-symbol">✂</span></div><strong class="stat-value" th:text="${totalBarberos}">0</strong><span class="stat-foot">Profesionales registrados</span></article>
+            <article class="card stat-card"><div class="stat-top"><span class="stat-label">Servicios</span><span class="stat-symbol">◇</span></div><strong class="stat-value" th:text="${totalServicios}">0</strong><span class="stat-foot">Servicios en catálogo</span></article>
+            <article class="card stat-card"><div class="stat-top"><span class="stat-label">Citas</span><span class="stat-symbol">◷</span></div><strong class="stat-value" th:text="${totalCitas}">0</strong><span class="stat-foot">Citas registradas</span></article>
+            <article class="card stat-card"><div class="stat-top"><span class="stat-label">Productos</span><span class="stat-symbol">▣</span></div><strong class="stat-value" th:text="${totalProductos}">0</strong><span class="stat-foot">Referencias de inventario</span></article>
+        </section>
+        <section class="dashboard-grid">
+            <div>
+                <article class="card welcome-panel">
+                    <p class="eyebrow">Navaja Barber Studio</p>
+                    <h2>Un gran servicio empieza con una buena gestión.</h2>
+                    <p>Administra tu equipo, cuida la experiencia de tus clientes y mantén cada detalle de la operación bajo control.</p>
+                </article>
+                <article class="card panel" style="margin-top: 18px">
+                    <div class="panel-heading"><div><h2>Accesos rápidos</h2><p>Continúa con las tareas frecuentes.</p></div></div>
+                    <div class="quick-grid">
+                        <a class="quick-link" th:href="@{/clientes/nuevo}"><span class="quick-icon">♙</span><span><strong>Registrar cliente</strong><small>Crear ficha de cliente</small></span></a>
+                        <a class="quick-link" th:href="@{/barberos/nuevo}"><span class="quick-icon">✂</span><span><strong>Agregar barbero</strong><small>Completar el equipo</small></span></a>
+                        <a class="quick-link" th:href="@{/servicios/nuevo}"><span class="quick-icon">◇</span><span><strong>Nuevo servicio</strong><small>Actualizar el catálogo</small></span></a>
+                        <a class="quick-link" th:href="@{/inventario/movimientos/nuevo}"><span class="quick-icon">＋</span><span><strong>Movimiento de stock</strong><small>Registrar entrada o salida</small></span></a>
+                    </div>
+                </article>
+            </div>
+            <article class="card panel">
+                <div class="panel-heading"><div><h2>Tu espacio de trabajo</h2><p>Herramientas para el día a día.</p></div></div>
+                <div class="info-row"><span class="stat-symbol">◷</span><div><strong>Agenda organizada</strong><span>Consulta, registra y reprograma citas desde su módulo.</span></div></div>
+                <div class="info-row"><span class="stat-symbol">▥</span><div><strong>Inventario al día</strong><span>Controla existencias y revisa los movimientos registrados.</span></div></div>
+                <div class="info-row"><span class="stat-symbol">$</span><div><strong>Pagos vinculados</strong><span>Administra pagos y su relación con cada cita.</span></div></div>
+                <div class="info-row"><span class="stat-symbol">◇</span><div><strong>Equipo y catálogo</strong><span>Asocia barberos con los servicios que realizan.</span></div></div>
+            </article>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle del movimiento')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Inventario', 'inventario', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Inventario · Movimiento</p><h1 class="page-title" th:text="|Movimiento #${movimiento.idMovimiento}|">Movimiento</h1><p class="page-description">Registro de ajuste de existencias.</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/inventario/movimientos}">Volver al historial</a></div></div>
+        <section class="card form-card"><div class="detail-grid">
+            <div class="detail-item"><span>Producto</span><strong><a th:href="@{/productos/{id}(id=${producto.idProducto})}" th:text="${producto.nombre}">Producto</a></strong></div>
+            <div class="detail-item"><span>Tipo</span><strong><span class="badge" th:classappend="| badge-${#strings.toLowerCase(movimiento.tipo)}|" th:text="${movimiento.tipo}">Tipo</span></strong></div>
+            <div class="detail-item"><span>Cantidad</span><strong th:text="${movimiento.cantidad}">—</strong></div>
+            <div class="detail-item"><span>Fecha</span><strong th:text="${movimiento.fecha != null ? #temporals.format(movimiento.fecha, 'dd/MM/yyyy HH:mm') : '—'}">—</strong></div>
+        </div><div class="detail-actions"><a class="btn btn-primary" th:href="@{/inventario/movimientos/producto/{idProducto}(idProducto=${producto.idProducto})}">Historial del producto</a><a class="btn btn-outline" th:href="@{/inventario}">Inventario actual</a></div></section>
+    </main>
+</div>
+</body>
+</html>

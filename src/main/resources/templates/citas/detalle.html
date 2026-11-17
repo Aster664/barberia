@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle de cita')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Citas', 'citas', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Agenda · Detalle</p><h1 class="page-title" th:text="|Cita #${cita.idCita}|">Cita</h1><p class="page-description">Información, servicios y estado de la atención.</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/citas}">Volver a citas</a></div></div>
+        <section class="card form-card"><div class="detail-grid">
+            <div class="detail-item"><span>Cliente</span><strong th:text="|${cliente.nombres} ${cliente.apellidos}|">—</strong></div>
+            <div class="detail-item"><span>Barbero</span><strong th:text="|${barbero.nombres} ${barbero.apellidos}|">—</strong></div>
+            <div class="detail-item"><span>Inicio</span><strong th:text="${#temporals.format(cita.fechaHoraInicio, 'dd/MM/yyyy HH:mm')}">—</strong></div>
+            <div class="detail-item"><span>Fin</span><strong th:text="${#temporals.format(cita.fechaHoraFin, 'dd/MM/yyyy HH:mm')}">—</strong></div>
+            <div class="detail-item"><span>Estado actual</span><strong><span class="badge" th:classappend="| badge-${#strings.toLowerCase(cita.estado)}|" th:text="${cita.estado}">PROGRAMADA</span></strong></div>
+            <div class="detail-item"><span>Total de servicios</span><strong th:text="|$ ${total}|">$ 0</strong></div>
+            <div class="detail-item" style="grid-column: 1 / -1"><span>Observaciones</span><strong th:text="${cita.observaciones ?: 'Sin observaciones'}">—</strong></div>
+        </div>
+        <div class="detail-actions"><a class="btn btn-primary" th:href="@{/citas/{id}/editar(id=${cita.idCita})}">Editar cita</a><a class="btn btn-outline" th:href="@{/citas/{id}/reprogramar(id=${cita.idCita})}">Reprogramar</a><a class="btn btn-outline" th:href="@{/citas/{id}/servicios(id=${cita.idCita})}">Administrar servicios</a><a class="btn btn-outline" th:href="@{/pagos/cita/{idCita}(idCita=${cita.idCita})}">Ver pagos</a><a class="btn btn-outline" th:href="@{/pagos/nuevo(idCita=${cita.idCita})}">Registrar pago</a>
+            <form class="inline-form" method="post" th:action="@{/citas/{id}/eliminar(id=${cita.idCita})}" data-confirm="¿Eliminar esta cita?"><button class="btn btn-danger" type="submit">Eliminar cita</button></form>
+        </div>
+        <form class="filter-row" method="post" th:action="@{/citas/{id}/estado(id=${cita.idCita})}">
+            <div class="field"><label for="estadoCambio">Cambiar estado</label><select id="estadoCambio" name="estado" required><option value="">Selecciona un estado</option><option th:each="estado : ${estados}" th:value="${estado}" th:text="${estado}" th:selected="${cita.estado == estado}">Estado</option></select></div>
+            <button class="btn btn-outline btn-small" type="submit">Actualizar estado</button>
+        </form>
+        <div class="panel-heading" style="margin-top: 23px"><div><h2>Servicios de la cita</h2><p>Detalle de servicios y precio aplicado.</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Servicio</th><th>Cantidad</th><th>Precio aplicado por unidad</th></tr></thead><tbody>
+            <tr th:each="detalle : ${detalles}"><td th:text="${serviciosPorId[detalle.idServicio].nombre}">Servicio</td><td th:text="${detalle.cantidad}">1</td><td th:text="|$ ${detalle.precioAplicado}|">0</td></tr>
+            <tr th:if="${#lists.isEmpty(detalles)}"><td colspan="3" class="empty-state">Todavía no hay servicios asociados a esta cita.</td></tr>
+        </tbody></table></div></section>
+    </main>
+</div>
+</body>
+</html>

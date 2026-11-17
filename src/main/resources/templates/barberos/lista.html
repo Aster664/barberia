@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Barberos')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Barberos', 'barberos', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Equipo</p><h1 class="page-title">Barberos</h1><p class="page-description">Administra el equipo y las especialidades de cada profesional.</p></div><div class="heading-actions"><a class="btn btn-primary" th:href="@{/barberos/nuevo}">＋ Nuevo barbero</a></div></div>
+        <section class="card table-card">
+            <div class="table-toolbar"><p th:text="|${#lists.size(barberos)} profesionales registrados|">Equipo registrado</p><a class="btn btn-outline btn-small" th:href="@{/horarios}">Ver horarios</a></div>
+            <div class="table-wrap"><table><thead><tr><th>Profesional</th><th>Documento</th><th>Contacto</th><th>Contratación</th><th>Estado</th><th>Acciones</th></tr></thead>
+                <tbody>
+                <tr th:each="barbero : ${barberos}">
+                    <td><span class="table-primary" th:text="|${barbero.nombres} ${barbero.apellidos}|">Nombre</span><span class="table-secondary" th:text="|ID ${barbero.idBarbero}|">ID</span></td>
+                    <td th:text="${barbero.documentoIdentidad}">Documento</td>
+                    <td><span th:text="${barbero.telefono ?: '—'}">Teléfono</span><span class="table-secondary" th:text="${barbero.email ?: '—'}">Correo</span></td>
+                    <td th:text="${barbero.fechaContratacion ?: '—'}">Fecha</td>
+                    <td><span class="badge" th:classappend="| badge-${#strings.toLowerCase(barbero.estado)}|" th:text="${barbero.estado}">Estado</span></td>
+                    <td><div class="table-actions"><a class="btn btn-outline btn-small" th:href="@{/barberos/{id}(id=${barbero.idBarbero})}">Ver</a><a class="btn btn-outline btn-small" th:href="@{/barberos/{id}/editar(id=${barbero.idBarbero})}">Editar</a><form class="inline-form" method="post" th:action="@{/barberos/{id}/eliminar(id=${barbero.idBarbero})}" data-confirm="¿Eliminar este barbero?"><button class="btn btn-danger btn-small" type="submit">Eliminar</button></form></div></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(barberos)}"><td colspan="6"><div class="empty-state"><strong>Aún no hay barberos</strong><p>Agrega al primer profesional para comenzar.</p><a class="btn btn-primary btn-small" th:href="@{/barberos/nuevo}">Registrar barbero</a></div></td></tr>
+                </tbody>
+            </table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

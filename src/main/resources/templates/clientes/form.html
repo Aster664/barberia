@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${cliente.idCliente == null ? 'Nuevo cliente' : 'Editar cliente'})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Clientes', 'clientes', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Relaciones</p><h1 class="page-title" th:text="${cliente.idCliente == null ? 'Nuevo cliente' : 'Editar cliente'}">Cliente</h1><p class="page-description">Registra la información de contacto y preferencias.</p></div></div>
+        <form class="card form-card" method="post" th:object="${cliente}" th:action="@{${cliente.idCliente == null ? '/clientes/guardar' : '/clientes/' + cliente.idCliente + '/actualizar'}}">
+            <h2 class="form-section-title">Datos del cliente</h2>
+            <div class="form-grid">
+                <div class="field"><label for="nombres">Nombres *</label><input id="nombres" name="nombres" type="text" maxlength="100" required th:value="*{nombres}"></div>
+                <div class="field"><label for="apellidos">Apellidos *</label><input id="apellidos" name="apellidos" type="text" maxlength="100" required th:value="*{apellidos}"></div>
+                <div class="field"><label for="telefono">Teléfono</label><input id="telefono" name="telefono" type="tel" th:value="*{telefono}"></div>
+                <div class="field"><label for="email">Correo electrónico</label><input id="email" name="email" type="email" maxlength="150" th:value="*{email}"></div>
+                <div class="field"><label for="fechaNacimiento">Fecha de nacimiento</label><input id="fechaNacimiento" name="fechaNacimiento" type="date" th:value="*{fechaNacimiento}"></div>
+                <div class="field" th:if="${cliente.idCliente != null}"><label for="estado">Estado *</label><select id="estado" name="estado" required><option th:each="estado : ${estados}" th:value="${estado}" th:text="${estado}" th:selected="${cliente.estado == estado}">ACTIVO</option></select></div>
+                <div class="field field-full"><label for="notas">Notas</label><textarea id="notas" name="notas" th:text="*{notas}"></textarea></div>
+            </div>
+            <p class="callout" th:if="${cliente.idCliente == null}">El estado inicial se establece automáticamente como activo.</p>
+            <div class="form-actions"><a class="btn btn-outline" th:href="@{/clientes}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar cliente</button></div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

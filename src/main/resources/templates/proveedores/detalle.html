@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle del proveedor')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Proveedores', 'proveedores', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Proveedores · Ficha</p><h1 class="page-title" th:text="${proveedor.nombre}">Proveedor</h1><p class="page-description" th:text="|Proveedor #${proveedor.idProveedor}|">Ficha</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/proveedores}">Volver a proveedores</a></div></div>
+        <section class="card form-card"><div class="detail-grid">
+            <div class="detail-item"><span>Teléfono</span><strong th:text="${proveedor.telefono ?: '—'}">—</strong></div>
+            <div class="detail-item"><span>Correo</span><strong th:text="${proveedor.correo ?: '—'}">—</strong></div>
+            <div class="detail-item" style="grid-column: 1 / -1"><span>Dirección</span><strong th:text="${proveedor.direccion ?: '—'}">—</strong></div>
+        </div><div class="detail-actions"><a class="btn btn-primary" th:href="@{/proveedores/{id}/editar(id=${proveedor.idProveedor})}">Editar proveedor</a><a class="btn btn-outline" th:href="@{/proveedores/{idProveedor}/productos(idProveedor=${proveedor.idProveedor})}">Productos asociados</a></div></section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle del pago')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Pagos', 'pagos', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Pagos · Detalle</p><h1 class="page-title" th:text="|Pago #${pago.idPago}|">Pago</h1><p class="page-description">Información del pago y cita relacionada.</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/pagos/cita/{idCita}(idCita=${pago.idCita})}">Volver a pagos</a></div></div>
+        <section class="card form-card"><div class="detail-grid">
+            <div class="detail-item"><span>Cita</span><strong><a th:href="@{/citas/{id}(id=${cita.idCita})}" th:text="|Cita #${cita.idCita}|">Cita</a></strong></div>
+            <div class="detail-item"><span>Estado</span><strong><span class="badge" th:classappend="| badge-${#strings.toLowerCase(pago.estado)}|" th:text="${pago.estado}">Estado</span></strong></div>
+            <div class="detail-item"><span>Monto</span><strong th:text="|$ ${pago.monto}|">—</strong></div>
+            <div class="detail-item"><span>Propina</span><strong th:text="|$ ${pago.propina ?: 0}|">—</strong></div>
+            <div class="detail-item"><span>Método</span><strong th:text="${#strings.replace(pago.metodoPago.name(), '_', ' ')}">—</strong></div>
+            <div class="detail-item"><span>Fecha</span><strong th:text="${pago.fechaPago != null ? #temporals.format(pago.fechaPago, 'dd/MM/yyyy HH:mm') : '—'}">—</strong></div>
+            <div class="detail-item"><span>Referencia</span><strong th:text="${pago.referencia ?: '—'}">—</strong></div>
+        </div>
+        <div class="detail-actions"><a class="btn btn-primary" th:href="@{/pagos/{id}/editar(id=${pago.idPago})}">Editar pago</a><form class="inline-form" method="post" th:action="@{/pagos/{id}/eliminar(id=${pago.idPago})}" data-confirm="¿Eliminar este pago?"><button class="btn btn-danger" type="submit">Eliminar pago</button></form></div>
+        <form class="filter-row" method="post" th:action="@{/pagos/{id}/estado(id=${pago.idPago})}"><div class="field"><label for="estado">Cambiar estado</label><select id="estado" name="estado" required><option value="">Selecciona un estado</option><option th:each="estado : ${estados}" th:value="${estado}" th:text="${estado}" th:selected="${pago.estado == estado}">Estado</option></select></div><button class="btn btn-outline btn-small" type="submit">Actualizar estado</button></form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

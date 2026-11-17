@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Barberos del servicio')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Servicios', 'servicios', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Catálogo · Equipo</p><h1 class="page-title" th:text="|Barberos para ${servicio.nombre}|">Barberos del servicio</h1><p class="page-description">Administra los profesionales habilitados para este servicio.</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/servicios/{id}(id=${servicio.idServicio})}">Volver al servicio</a></div></div>
+        <section class="card table-card">
+            <form class="filter-row" method="post" th:action="@{/servicios/{idServicio}/barberos/asociar(idServicio=${servicio.idServicio})}">
+                <div class="field"><label for="idBarbero">Agregar barbero</label><select id="idBarbero" name="idBarbero" required><option value="">Selecciona un barbero</option><option th:each="barbero : ${barberosPorId.values()}" th:value="${barbero.idBarbero}" th:disabled="${#lists.contains(asociaciones.![idBarbero], barbero.idBarbero)}" th:text="|${barbero.nombres} ${barbero.apellidos}${#lists.contains(asociaciones.![idBarbero], barbero.idBarbero) ? ' · Ya asociado' : ''}|">Barbero</option></select></div><button class="btn btn-primary btn-small" type="submit">Asociar</button>
+            </form>
+            <div class="table-toolbar"><p th:text="|${#lists.size(asociaciones)} barberos asociados|">Barberos</p></div>
+            <div class="table-wrap"><table><thead><tr><th>Profesional</th><th>Contacto</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="asociacion : ${asociaciones}" th:with="barbero=${barberosPorId[asociacion.idBarbero]}">
+                    <td><a class="table-primary" th:href="@{/barberos/{id}(id=${barbero.idBarbero})}" th:text="|${barbero.nombres} ${barbero.apellidos}|">Barbero</a></td><td th:text="${barbero.telefono ?: '—'}">Contacto</td><td th:text="${barbero.estado}">Estado</td>
+                    <td><form method="post" th:action="@{/servicios/{idServicio}/barberos/{idBarbero}/desasociar(idServicio=${servicio.idServicio},idBarbero=${asociacion.idBarbero})}" data-confirm="¿Desasociar este barbero del servicio?"><button class="btn btn-danger btn-small" type="submit">Desasociar</button></form></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(asociaciones)}"><td colspan="4"><div class="empty-state"><strong>Sin barberos asociados</strong><p>Selecciona profesionales que ofrezcan este servicio.</p></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

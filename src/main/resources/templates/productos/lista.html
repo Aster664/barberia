@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Productos')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Productos', 'productos', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Catálogo</p><h1 class="page-title">Productos</h1><p class="page-description">Administra el catálogo y revisa niveles de existencia.</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/inventario}">Ver inventario</a><a class="btn btn-primary" th:href="@{/productos/nuevo}">＋ Nuevo producto</a></div></div>
+        <section class="card table-card"><div class="table-toolbar"><p th:text="|${#lists.size(productos)} productos registrados|">Productos</p><a class="btn btn-outline btn-small" th:href="@{/inventario/movimientos}">Historial de movimientos</a></div>
+            <div class="table-wrap"><table><thead><tr><th>Producto</th><th>Precio compra</th><th>Precio venta</th><th>Existencia</th><th>Stock mínimo</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="producto : ${productos}" th:classappend="${producto.cantidadDisponible <= producto.stockMinimo} ? ' stock-low'">
+                    <td><span class="table-primary" th:text="${producto.nombre}">Producto</span><span class="table-secondary" th:text="${producto.descripcion ?: 'Sin descripción'}">Descripción</span></td>
+                    <td th:text="|$ ${producto.precioCompra}|">Compra</td><td th:text="|$ ${producto.precioVenta}|">Venta</td>
+                    <td><span class="badge" th:classappend="${producto.cantidadDisponible <= producto.stockMinimo} ? ' badge-danger' : ' badge-success'" th:text="${producto.cantidadDisponible}">0</span></td>
+                    <td th:text="${producto.stockMinimo}">Mínimo</td>
+                    <td><div class="table-actions"><a class="btn btn-outline btn-small" th:href="@{/productos/{id}(id=${producto.idProducto})}">Ver</a><a class="btn btn-outline btn-small" th:href="@{/productos/{id}/editar(id=${producto.idProducto})}">Editar</a><a class="btn btn-outline btn-small" th:href="@{/inventario/movimientos/producto/{idProducto}(idProducto=${producto.idProducto})}">Movimientos</a><form class="inline-form" method="post" th:action="@{/productos/{id}/eliminar(id=${producto.idProducto})}" data-confirm="¿Eliminar este producto?"><button class="btn btn-danger btn-small" type="submit">Eliminar</button></form></div></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(productos)}"><td colspan="6"><div class="empty-state"><strong>Sin productos en el catálogo</strong><p>Registra un producto para llevar el control de existencias.</p><a class="btn btn-primary btn-small" th:href="@{/productos/nuevo}">Crear producto</a></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

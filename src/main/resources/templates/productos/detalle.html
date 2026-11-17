@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle del producto')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Productos', 'productos', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Productos · Ficha</p><h1 class="page-title" th:text="${producto.nombre}">Producto</h1><p class="page-description" th:text="|Producto #${producto.idProducto}|">Ficha del producto</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/productos}">Volver al catálogo</a></div></div>
+        <section class="card form-card"><div class="detail-grid">
+            <div class="detail-item"><span>Precio de compra</span><strong th:text="|$ ${producto.precioCompra}|">—</strong></div>
+            <div class="detail-item"><span>Precio de venta</span><strong th:text="|$ ${producto.precioVenta}|">—</strong></div>
+            <div class="detail-item"><span>Existencia disponible</span><strong th:text="${producto.cantidadDisponible}">—</strong></div>
+            <div class="detail-item"><span>Stock mínimo</span><strong th:text="${producto.stockMinimo}">—</strong></div>
+            <div class="detail-item" style="grid-column: 1 / -1"><span>Descripción</span><strong th:text="${producto.descripcion ?: 'Sin descripción'}">—</strong></div>
+        </div><div class="detail-actions"><a class="btn btn-primary" th:href="@{/productos/{id}/editar(id=${producto.idProducto})}">Editar producto</a><a class="btn btn-outline" th:href="@{/inventario/movimientos/nuevo(idProducto=${producto.idProducto})}">Registrar movimiento</a><a class="btn btn-outline" th:href="@{/productos/{idProducto}/proveedores(idProducto=${producto.idProducto})}">Proveedores asociados</a><a class="btn btn-outline" th:href="@{/inventario/movimientos/producto/{idProducto}(idProducto=${producto.idProducto})}">Ver historial</a></div></section>
+    </main>
+</div>
+</body>
+</html>

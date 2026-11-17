@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${cita.idCita == null ? 'Nueva cita' : 'Editar cita'})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Citas', 'citas', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Agenda</p><h1 class="page-title" th:text="${cita.idCita == null ? 'Nueva cita' : 'Editar cita'}">Cita</h1><p class="page-description">Selecciona cliente, profesional y horario de atención.</p></div></div>
+        <form class="card form-card" th:object="${cita}" method="post" th:action="@{${cita.idCita == null ? '/citas/guardar' : '/citas/' + cita.idCita + '/actualizar'}}">
+            <h2 class="form-section-title">Detalles de la cita</h2><div class="form-grid">
+                <div class="field"><label for="idCliente">Cliente *</label><select id="idCliente" name="idCliente" required><option value="">Selecciona un cliente</option><option th:each="cliente : ${clientes}" th:value="${cliente.idCliente}" th:text="|${cliente.nombres} ${cliente.apellidos}|" th:selected="${cita.idCliente == cliente.idCliente}">Cliente</option></select></div>
+                <div class="field"><label for="idBarbero">Barbero *</label><select id="idBarbero" name="idBarbero" required><option value="">Selecciona un barbero</option><option th:each="barbero : ${barberos}" th:value="${barbero.idBarbero}" th:text="|${barbero.nombres} ${barbero.apellidos}|" th:selected="${cita.idBarbero == barbero.idBarbero}">Barbero</option></select></div>
+                <div class="field"><label for="fechaHoraInicio">Inicio *</label><input id="fechaHoraInicio" name="fechaHoraInicio" type="datetime-local" required th:value="${cita.fechaHoraInicio == null ? '' : #temporals.format(cita.fechaHoraInicio, 'yyyy-MM-dd''T''HH:mm')}"></div>
+                <div class="field"><label for="fechaHoraFin">Fin *</label><input id="fechaHoraFin" name="fechaHoraFin" type="datetime-local" required th:value="${cita.fechaHoraFin == null ? '' : #temporals.format(cita.fechaHoraFin, 'yyyy-MM-dd''T''HH:mm')}"></div>
+                <div class="field" th:if="${cita.idCita == null}"><label for="estado">Estado inicial</label><select id="estado" name="estado"><option value="">PROGRAMADA (predeterminado)</option><option th:each="estado : ${estados}" th:if="${estado.name() == 'PROGRAMADA' or estado.name() == 'CONFIRMADA'}" th:value="${estado}" th:text="${estado}" th:selected="${cita.estado == estado}">PROGRAMADA</option></select></div>
+                <div class="field" th:if="${cita.idCita != null}"><label for="estado">Estado *</label><select id="estado" name="estado" required><option th:each="estado : ${estados}" th:value="${estado}" th:text="${estado}" th:selected="${cita.estado == estado}">PROGRAMADA</option></select></div>
+                <div class="field field-full"><label for="observaciones">Observaciones</label><textarea id="observaciones" name="observaciones" th:text="*{observaciones}"></textarea></div>
+            </div>
+            <p class="callout">Los horarios disponibles, cruces de agenda y reglas de estado se validan en el sistema.</p>
+            <div class="form-actions"><a class="btn btn-outline" th:href="@{${cita.idCita == null ? '/citas' : '/citas/' + cita.idCita}}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar cita</button></div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

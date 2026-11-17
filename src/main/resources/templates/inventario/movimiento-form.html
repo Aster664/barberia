@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Registrar movimiento')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Inventario', 'inventario', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Operación · Existencias</p><h1 class="page-title">Registrar movimiento</h1><p class="page-description">Cada ajuste queda registrado en el historial del producto.</p></div></div>
+        <form class="card form-card" method="post" th:action="@{/inventario/movimientos/guardar}">
+            <h2 class="form-section-title">Detalle del movimiento</h2><div class="form-grid">
+                <div class="field field-full"><label for="idProducto">Producto *</label><select id="idProducto" name="idProducto" required><option value="">Selecciona un producto</option><option th:each="producto : ${productos}" th:value="${producto.idProducto}" th:text="|${producto.nombre} · Existencia ${producto.cantidadDisponible}|" th:selected="${movimiento.idProducto == producto.idProducto}">Producto</option></select></div>
+                <div class="field"><label for="tipo">Tipo de movimiento *</label><select id="tipo" name="tipo" required><option value="">Selecciona entrada o salida</option><option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="${tipo}" th:selected="${movimiento.tipo == tipo}">ENTRADA</option></select></div>
+                <div class="field"><label for="cantidad">Cantidad *</label><input id="cantidad" name="cantidad" type="number" min="1" step="1" required></div>
+                <div class="field field-full"><label for="fecha">Fecha y hora</label><input id="fecha" name="fecha" type="datetime-local" th:value="${movimiento.fecha == null ? '' : #temporals.format(movimiento.fecha, 'yyyy-MM-dd''T''HH:mm')}"><span class="field-hint">Si se deja vacío, se aplica el comportamiento predeterminado del Service.</span></div>
+            </div><p class="callout">Las reglas de stock se validan al registrar el movimiento.</p>
+            <div class="form-actions"><a class="btn btn-outline" th:href="@{/inventario}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar movimiento</button></div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

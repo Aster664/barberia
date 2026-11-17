@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${pago.idPago == null ? 'Nuevo pago' : 'Editar pago'})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Pagos', 'pagos', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Administración</p><h1 class="page-title" th:text="${pago.idPago == null ? 'Registrar pago' : 'Editar pago'}">Pago</h1><p class="page-description">Asocia el pago a una cita y registra sus detalles.</p></div></div>
+        <form class="card form-card" method="post" th:object="${pago}" th:action="@{${pago.idPago == null ? '/pagos/guardar' : '/pagos/' + pago.idPago + '/actualizar'}}">
+            <h2 class="form-section-title">Detalle del pago</h2><div class="form-grid">
+                <div class="field field-full"><label for="idCita">Cita *</label><select id="idCita" name="idCita" required><option value="">Selecciona una cita</option><option th:each="cita : ${citas}" th:value="${cita.idCita}" th:text="|Cita #${cita.idCita} · ${#temporals.format(cita.fechaHoraInicio, 'dd/MM/yyyy HH:mm')}|" th:selected="${pago.idCita == cita.idCita}">Cita</option></select></div>
+                <div class="field"><label for="monto">Monto *</label><input id="monto" name="monto" type="number" min="0.01" step="0.01" required th:value="*{monto}"></div>
+                <div class="field"><label for="propina">Propina</label><input id="propina" name="propina" type="number" min="0" step="0.01" th:value="*{propina}"></div>
+                <div class="field"><label for="metodoPago">Método de pago *</label><select id="metodoPago" name="metodoPago" required><option value="">Selecciona un método</option><option th:each="metodo : ${metodos}" th:value="${metodo}" th:text="${#strings.replace(metodo.name(), '_', ' ')}" th:selected="${pago.metodoPago == metodo}">Método</option></select></div>
+                <div class="field"><label for="fechaPago">Fecha y hora</label><input id="fechaPago" name="fechaPago" type="datetime-local" th:value="${pago.fechaPago == null ? '' : #temporals.format(pago.fechaPago, 'yyyy-MM-dd''T''HH:mm')}"></div>
+                <div class="field"><label for="referencia">Referencia</label><input id="referencia" name="referencia" type="text" th:value="*{referencia}"></div>
+                <div class="field" th:if="${pago.idPago != null}"><label for="estado">Estado</label><select id="estado" name="estado"><option th:each="estado : ${estados}" th:value="${estado}" th:text="${estado}" th:selected="${pago.estado == estado}">Estado</option></select></div>
+            </div>
+            <p class="callout" th:if="${pago.idPago == null}">El sistema aplica el estado inicial predeterminado del pago.</p>
+            <div class="form-actions"><a class="btn btn-outline" th:href="@{${pago.idCita != null ? '/pagos/cita/' + pago.idCita : '/pagos'}}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar pago</button></div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

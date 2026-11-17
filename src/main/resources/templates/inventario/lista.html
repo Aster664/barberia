@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Inventario')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Inventario', 'inventario', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Operación</p><h1 class="page-title">Inventario</h1><p class="page-description">Existencias actuales y alertas por nivel mínimo.</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/inventario/movimientos}">Historial</a><a class="btn btn-primary" th:href="@{/inventario/movimientos/nuevo}">＋ Registrar movimiento</a></div></div>
+        <section class="card table-card"><div class="table-toolbar"><p th:text="|${#lists.size(productos)} productos en inventario|">Existencias</p><a class="btn btn-outline btn-small" th:href="@{/productos/nuevo}">Nuevo producto</a></div>
+            <div class="table-wrap"><table><thead><tr><th>Producto</th><th>Precio venta</th><th>Existencia</th><th>Stock mínimo</th><th>Indicador</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="producto : ${productos}" th:classappend="${producto.cantidadDisponible <= producto.stockMinimo} ? ' stock-low'">
+                    <td><span class="table-primary" th:text="${producto.nombre}">Producto</span><span class="table-secondary" th:text="${producto.descripcion ?: 'Sin descripción'}">Descripción</span></td>
+                    <td th:text="|$ ${producto.precioVenta}|">Precio</td><td class="table-primary" th:text="${producto.cantidadDisponible}">0</td><td th:text="${producto.stockMinimo}">0</td>
+                    <td><span class="badge" th:classappend="${producto.cantidadDisponible <= producto.stockMinimo} ? ' badge-danger' : ' badge-success'" th:text="${producto.cantidadDisponible <= producto.stockMinimo} ? 'Stock bajo' : 'Disponible'">Estado</span></td>
+                    <td><div class="table-actions"><a class="btn btn-outline btn-small" th:href="@{/inventario/movimientos/nuevo(idProducto=${producto.idProducto})}">Ajustar stock</a><a class="btn btn-outline btn-small" th:href="@{/inventario/movimientos/producto/{idProducto}(idProducto=${producto.idProducto})}">Historial</a></div></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(productos)}"><td colspan="6"><div class="empty-state"><strong>Inventario vacío</strong><p>Agrega productos al catálogo para administrar existencias.</p><a class="btn btn-primary btn-small" th:href="@{/productos/nuevo}">Crear producto</a></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

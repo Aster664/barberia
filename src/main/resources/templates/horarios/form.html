@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${horario.idHorario == null ? 'Nuevo horario' : 'Editar horario'})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Horarios', 'horarios', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Equipo</p><h1 class="page-title" th:text="${horario.idHorario == null ? 'Nuevo horario' : 'Editar horario'}">Horario</h1><p class="page-description">Define un día y un bloque de atención para el barbero.</p></div></div>
+        <form class="card form-card" method="post" th:object="${horario}" th:action="@{${horario.idHorario == null ? '/horarios/guardar' : '/horarios/' + horario.idHorario + '/actualizar'}}">
+            <h2 class="form-section-title">Disponibilidad</h2><div class="form-grid">
+                <div class="field field-full"><label for="idBarbero">Barbero *</label><select id="idBarbero" name="idBarbero" required><option value="">Selecciona un barbero</option><option th:each="barbero : ${barberos}" th:value="${barbero.idBarbero}" th:text="|${barbero.nombres} ${barbero.apellidos}|" th:selected="${horario.idBarbero == barbero.idBarbero}">Barbero</option></select></div>
+                <div class="field"><label for="diaSemana">Día de la semana *</label><select id="diaSemana" name="diaSemana" required><option value="">Selecciona un día</option><option value="1" th:selected="${horario.diaSemana == 1}">Lunes</option><option value="2" th:selected="${horario.diaSemana == 2}">Martes</option><option value="3" th:selected="${horario.diaSemana == 3}">Miércoles</option><option value="4" th:selected="${horario.diaSemana == 4}">Jueves</option><option value="5" th:selected="${horario.diaSemana == 5}">Viernes</option><option value="6" th:selected="${horario.diaSemana == 6}">Sábado</option><option value="7" th:selected="${horario.diaSemana == 7}">Domingo</option></select></div>
+                <div class="field"><label for="horaInicio">Hora de inicio *</label><input id="horaInicio" name="horaInicio" type="time" required th:value="${horario.horaInicio == null ? '' : #temporals.format(horario.horaInicio, 'HH:mm')}"></div>
+                <div class="field"><label for="horaFin">Hora de fin *</label><input id="horaFin" name="horaFin" type="time" required th:value="${horario.horaFin == null ? '' : #temporals.format(horario.horaFin, 'HH:mm')}"></div>
+            </div><div class="form-actions"><a class="btn btn-outline" th:href="@{/horarios}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar horario</button></div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Movimientos de inventario')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Inventario', 'inventario', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Operación · Historial</p><h1 class="page-title">Movimientos de inventario</h1><p class="page-description" th:text="${producto != null ? 'Movimientos de ' + producto.nombre : 'Entradas y salidas registradas en el sistema.'}">Historial de stock</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/inventario}">Existencias actuales</a><a class="btn btn-primary" th:href="@{/inventario/movimientos/nuevo}">＋ Nuevo movimiento</a></div></div>
+        <section class="card table-card"><div class="table-toolbar"><p th:text="|${#lists.size(movimientos)} movimientos registrados|">Movimientos</p></div>
+            <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th>Cantidad</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="movimiento : ${movimientos}">
+                    <td th:text="${movimiento.fecha != null ? #temporals.format(movimiento.fecha, 'dd/MM/yyyy HH:mm') : '—'}">Fecha</td>
+                    <td th:text="${productosPorId[movimiento.idProducto].nombre}">Producto</td>
+                    <td><span class="badge" th:classappend="| badge-${#strings.toLowerCase(movimiento.tipo)}|" th:text="${movimiento.tipo}">Tipo</span></td>
+                    <td th:text="${movimiento.cantidad}">Cantidad</td>
+                    <td><a class="btn btn-outline btn-small" th:href="@{/inventario/movimientos/{id}(id=${movimiento.idMovimiento})}">Ver detalle</a></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(movimientos)}"><td colspan="5"><div class="empty-state"><strong>Sin movimientos registrados</strong><p>Los ajustes de existencia aparecerán aquí.</p><a class="btn btn-primary btn-small" th:href="@{/inventario/movimientos/nuevo}">Registrar movimiento</a></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

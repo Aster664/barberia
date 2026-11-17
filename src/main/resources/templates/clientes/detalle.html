@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle del cliente')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Clientes', 'clientes', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Clientes · Ficha</p><h1 class="page-title" th:text="|${cliente.nombres} ${cliente.apellidos}|">Cliente</h1><p class="page-description" th:text="|Cliente #${cliente.idCliente}|">Ficha de cliente</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/clientes}">Volver a clientes</a></div></div>
+        <section class="card form-card"><div class="detail-grid">
+            <div class="detail-item"><span>Estado</span><strong><span class="badge" th:classappend="| badge-${#strings.toLowerCase(cliente.estado)}|" th:text="${cliente.estado}">ACTIVO</span></strong></div>
+            <div class="detail-item"><span>Teléfono</span><strong th:text="${cliente.telefono ?: '—'}">—</strong></div>
+            <div class="detail-item"><span>Correo</span><strong th:text="${cliente.email ?: '—'}">—</strong></div>
+            <div class="detail-item"><span>Fecha de nacimiento</span><strong th:text="${cliente.fechaNacimiento ?: '—'}">—</strong></div>
+            <div class="detail-item" style="grid-column: 1 / -1"><span>Notas</span><strong th:text="${cliente.notas ?: 'Sin notas'}">—</strong></div>
+        </div><div class="detail-actions"><a class="btn btn-primary" th:href="@{/clientes/{id}/editar(id=${cliente.idCliente})}">Editar ficha</a><a class="btn btn-outline" th:href="@{/citas/cliente/{idCliente}(idCliente=${cliente.idCliente})}">Ver citas</a></div></section>
+    </main>
+</div>
+</body>
+</html>

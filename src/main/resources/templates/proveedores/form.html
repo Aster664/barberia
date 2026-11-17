@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${proveedor.idProveedor == null ? 'Nuevo proveedor' : 'Editar proveedor'})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Proveedores', 'proveedores', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Abastecimiento</p><h1 class="page-title" th:text="${proveedor.idProveedor == null ? 'Nuevo proveedor' : 'Editar proveedor'}">Proveedor</h1><p class="page-description">Registra la información de contacto del proveedor.</p></div></div>
+        <form class="card form-card" th:object="${proveedor}" method="post" th:action="@{${proveedor.idProveedor == null ? '/proveedores/guardar' : '/proveedores/' + proveedor.idProveedor + '/actualizar'}}">
+            <h2 class="form-section-title">Datos de contacto</h2><div class="form-grid">
+                <div class="field field-full"><label for="nombre">Nombre *</label><input id="nombre" name="nombre" type="text" maxlength="150" required th:value="*{nombre}"></div>
+                <div class="field"><label for="telefono">Teléfono</label><input id="telefono" name="telefono" type="tel" th:value="*{telefono}"></div>
+                <div class="field"><label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" th:value="*{correo}"></div>
+                <div class="field field-full"><label for="direccion">Dirección</label><textarea id="direccion" name="direccion" th:text="*{direccion}"></textarea></div>
+            </div><div class="form-actions"><a class="btn btn-outline" th:href="@{/proveedores}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar proveedor</button></div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Proveedores')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Proveedores', 'proveedores', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Abastecimiento</p><h1 class="page-title">Proveedores</h1><p class="page-description">Gestiona contactos y productos asociados a cada proveedor.</p></div><div class="heading-actions"><a class="btn btn-primary" th:href="@{/proveedores/nuevo}">＋ Nuevo proveedor</a></div></div>
+        <section class="card table-card"><div class="table-toolbar"><p th:text="|${#lists.size(proveedores)} proveedores registrados|">Proveedores</p></div>
+            <div class="table-wrap"><table><thead><tr><th>Proveedor</th><th>Contacto</th><th>Dirección</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="proveedor : ${proveedores}">
+                    <td><span class="table-primary" th:text="${proveedor.nombre}">Proveedor</span><span class="table-secondary" th:text="|ID ${proveedor.idProveedor}|">ID</span></td>
+                    <td><span th:text="${proveedor.telefono ?: '—'}">Teléfono</span><span class="table-secondary" th:text="${proveedor.correo ?: '—'}">Correo</span></td>
+                    <td th:text="${proveedor.direccion ?: '—'}">Dirección</td>
+                    <td><div class="table-actions"><a class="btn btn-outline btn-small" th:href="@{/proveedores/{id}(id=${proveedor.idProveedor})}">Ver</a><a class="btn btn-outline btn-small" th:href="@{/proveedores/{id}/editar(id=${proveedor.idProveedor})}">Editar</a><form class="inline-form" method="post" th:action="@{/proveedores/{id}/eliminar(id=${proveedor.idProveedor})}" data-confirm="¿Eliminar este proveedor?"><button class="btn btn-danger btn-small" type="submit">Eliminar</button></form></div></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(proveedores)}"><td colspan="4"><div class="empty-state"><strong>Sin proveedores registrados</strong><p>Agrega tus contactos de abastecimiento.</p><a class="btn btn-primary btn-small" th:href="@{/proveedores/nuevo}">Registrar proveedor</a></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

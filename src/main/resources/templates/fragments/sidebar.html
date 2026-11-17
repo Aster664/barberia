@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside th:fragment="sidebar(active)" class="sidebar">
+    <a class="brand" th:href="@{/}">
+        <span class="brand-mark">N</span>
+        <span><span class="brand-name">Navaja</span><span class="brand-caption">Barber studio</span></span>
+    </a>
+    <span class="nav-caption">Principal</span>
+    <nav aria-label="Navegación principal">
+        <ul class="nav-list">
+            <li><a class="nav-link" th:classappend="${active == 'dashboard'} ? ' active'" th:href="@{/}"><span class="nav-icon">⌂</span>Dashboard</a></li>
+            <li><a class="nav-link" th:classappend="${active == 'citas'} ? ' active'" th:href="@{/citas}"><span class="nav-icon">◷</span>Citas</a></li>
+            <li><a class="nav-link" th:classappend="${active == 'clientes'} ? ' active'" th:href="@{/clientes}"><span class="nav-icon">♙</span>Clientes</a></li>
+            <li><a class="nav-link" th:classappend="${active == 'barberos'} ? ' active'" th:href="@{/barberos}"><span class="nav-icon">✂</span>Barberos</a></li>
+            <li><a class="nav-link" th:classappend="${active == 'servicios'} ? ' active'" th:href="@{/servicios}"><span class="nav-icon">◇</span>Servicios</a></li>
+            <li><a class="nav-link" th:classappend="${active == 'horarios'} ? ' active'" th:href="@{/horarios}"><span class="nav-icon">▦</span>Horarios</a></li>
+            <li><a class="nav-link" th:classappend="${active == 'pagos'} ? ' active'" th:href="@{/pagos}"><span class="nav-icon">$</span>Pagos</a></li>
+        </ul>
+    </nav>
+    <span class="nav-caption">Operación</span>
+    <nav aria-label="Inventario y proveedores">
+        <ul class="nav-list">
+            <li><a class="nav-link" th:classappend="${active == 'productos'} ? ' active'" th:href="@{/productos}"><span class="nav-icon">▣</span>Productos</a></li>
+            <li><a class="nav-link" th:classappend="${active == 'proveedores'} ? ' active'" th:href="@{/proveedores}"><span class="nav-icon">▤</span>Proveedores</a></li>
+            <li><a class="nav-link" th:classappend="${active == 'inventario'} ? ' active'" th:href="@{/inventario}"><span class="nav-icon">▥</span>Inventario</a></li>
+        </ul>
+    </nav>
+    <div class="sidebar-foot"><strong>Navaja Barber Studio</strong>Gestión y atención con estilo</div>
+</aside>
+</body>
+</html>

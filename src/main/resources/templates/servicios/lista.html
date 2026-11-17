@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Servicios')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Servicios', 'servicios', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Catálogo</p><h1 class="page-title">Servicios</h1><p class="page-description">Define las opciones de atención que ofrece la barbería.</p></div><div class="heading-actions"><a class="btn btn-primary" th:href="@{/servicios/nuevo}">＋ Nuevo servicio</a></div></div>
+        <section class="card table-card"><div class="table-toolbar"><p th:text="|${#lists.size(servicios)} servicios registrados|">Catálogo</p></div>
+            <div class="table-wrap"><table><thead><tr><th>Servicio</th><th>Duración</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="servicio : ${servicios}">
+                    <td><span class="table-primary" th:text="${servicio.nombre}">Servicio</span><span class="table-secondary" th:text="${servicio.descripcion ?: 'Sin descripción'}">Descripción</span></td>
+                    <td th:text="|${servicio.duracionMinutos} min|">Duración</td><td th:text="|$ ${servicio.precio}|">Precio</td>
+                    <td><span class="badge" th:classappend="| badge-${#strings.toLowerCase(servicio.estado)}|" th:text="${servicio.estado}">Estado</span></td>
+                    <td><div class="table-actions"><a class="btn btn-outline btn-small" th:href="@{/servicios/{id}(id=${servicio.idServicio})}">Ver</a><a class="btn btn-outline btn-small" th:href="@{/servicios/{id}/editar(id=${servicio.idServicio})}">Editar</a><form class="inline-form" method="post" th:action="@{/servicios/{id}/eliminar(id=${servicio.idServicio})}" data-confirm="¿Eliminar este servicio?"><button class="btn btn-danger btn-small" type="submit">Eliminar</button></form></div></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(servicios)}"><td colspan="5"><div class="empty-state"><strong>El catálogo está vacío</strong><p>Registra los servicios disponibles en tu barbería.</p><a class="btn btn-primary btn-small" th:href="@{/servicios/nuevo}">Crear servicio</a></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

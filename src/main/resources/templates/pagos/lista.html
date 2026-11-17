@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Pagos')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Pagos', 'pagos', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Administración</p><h1 class="page-title">Pagos</h1><p class="page-description" th:text="${cita != null ? 'Pagos asociados a la cita #' + cita.idCita : 'Consulta los pagos registrados y su estado.'}">Pagos registrados</p></div><div class="heading-actions"><a class="btn btn-primary" th:href="${cita != null ? '/pagos/nuevo?idCita=' + cita.idCita : '/pagos/nuevo'}">＋ Registrar pago</a></div></div>
+        <section class="card table-card"><div class="table-toolbar"><p th:text="|${#lists.size(pagos)} pagos encontrados|">Pagos</p><a th:if="${cita != null}" class="btn btn-outline btn-small" th:href="@{/citas/{id}(id=${cita.idCita})}">Volver a la cita</a></div>
+            <div class="table-wrap"><table><thead><tr><th>Pago</th><th>Cita</th><th>Fecha</th><th>Monto</th><th>Propina</th><th>Método</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="pago : ${pagos}">
+                    <td class="table-primary" th:text="|#${pago.idPago}|">Pago</td><td><a class="table-primary" th:href="@{/citas/{id}(id=${pago.idCita})}" th:text="|Cita #${pago.idCita}|">Cita</a></td>
+                    <td th:text="${pago.fechaPago != null ? #temporals.format(pago.fechaPago, 'dd/MM/yyyy HH:mm') : '—'}">Fecha</td><td th:text="|$ ${pago.monto}|">Monto</td><td th:text="|$ ${pago.propina ?: 0}|">Propina</td><td th:text="${pago.metodoPago}">Método</td>
+                    <td><span class="badge" th:classappend="| badge-${#strings.toLowerCase(pago.estado)}|" th:text="${pago.estado}">Estado</span></td>
+                    <td><div class="table-actions"><a class="btn btn-outline btn-small" th:href="@{/pagos/{id}(id=${pago.idPago})}">Ver</a><a class="btn btn-outline btn-small" th:href="@{/pagos/{id}/editar(id=${pago.idPago})}">Editar</a></div></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(pagos)}"><td colspan="8"><div class="empty-state"><strong>Sin pagos registrados</strong><p>Los pagos se asocian a una cita existente.</p><a class="btn btn-outline btn-small" th:href="@{/citas}">Consultar citas</a></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

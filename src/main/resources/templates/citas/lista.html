@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Citas')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Citas', 'citas', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Agenda</p><h1 class="page-title">Citas</h1><p class="page-description">Consulta y administra las citas de la barbería.</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/citas/rango}">Buscar por rango</a><a class="btn btn-primary" th:href="@{/citas/nuevo}">＋ Nueva cita</a></div></div>
+        <section class="card table-card">
+            <form class="filter-row" method="get" th:action="@{/citas/rango}">
+                <div class="field"><label for="desde">Desde</label><input id="desde" name="desde" type="datetime-local" th:value="${desde != null ? #temporals.format(desde, 'yyyy-MM-dd''T''HH:mm') : ''}"></div>
+                <div class="field"><label for="hasta">Hasta</label><input id="hasta" name="hasta" type="datetime-local" th:value="${hasta != null ? #temporals.format(hasta, 'yyyy-MM-dd''T''HH:mm') : ''}"></div>
+                <button class="btn btn-outline btn-small" type="submit">Filtrar fechas</button>
+                <a class="btn btn-outline btn-small" th:href="@{/citas}">Ver todas</a>
+            </form>
+            <div class="table-toolbar"><p th:text="|${#lists.size(citas)} citas encontradas|">Citas</p></div>
+            <div class="table-wrap"><table><thead><tr><th>Fecha y hora</th><th>Cliente</th><th>Barbero</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="cita : ${citas}">
+                    <td><span class="table-primary" th:text="${#temporals.format(cita.fechaHoraInicio, 'dd/MM/yyyy HH:mm')}">Fecha</span><span class="table-secondary" th:text="|Hasta ${#temporals.format(cita.fechaHoraFin, 'HH:mm')}|">Fin</span></td>
+                    <td th:text="|${clientesPorId[cita.idCliente].nombres} ${clientesPorId[cita.idCliente].apellidos}|">Cliente</td>
+                    <td th:text="|${barberosPorId[cita.idBarbero].nombres} ${barberosPorId[cita.idBarbero].apellidos}|">Barbero</td>
+                    <td><span class="badge" th:classappend="| badge-${#strings.toLowerCase(cita.estado)}|" th:text="${cita.estado}">Estado</span></td>
+                    <td><div class="table-actions"><a class="btn btn-outline btn-small" th:href="@{/citas/{id}(id=${cita.idCita})}">Ver</a><a class="btn btn-outline btn-small" th:href="@{/citas/{id}/editar(id=${cita.idCita})}">Editar</a><a class="btn btn-outline btn-small" th:href="@{/citas/{id}/reprogramar(id=${cita.idCita})}">Reprogramar</a></div></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(citas)}"><td colspan="5"><div class="empty-state"><strong>No hay citas para mostrar</strong><p>Registra una cita o ajusta el rango de búsqueda.</p><a class="btn btn-primary btn-small" th:href="@{/citas/nuevo}">Crear cita</a></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

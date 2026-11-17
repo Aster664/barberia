@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Editar servicio de la cita')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Citas', 'citas', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Agenda · Detalle de servicios</p><h1 class="page-title">Editar servicio</h1><p class="page-description" th:text="|${servicio.nombre} · Cita #${cita.idCita}|">Servicio de la cita</p></div></div>
+        <form class="card form-card" method="post" th:action="@{/citas/{idCita}/servicios/{idServicio}/actualizar(idCita=${cita.idCita},idServicio=${servicio.idServicio})}">
+            <h2 class="form-section-title">Cantidad y precio aplicado</h2><div class="form-grid">
+                <div class="field"><label for="cantidad">Cantidad *</label><input id="cantidad" name="cantidad" type="number" min="1" step="1" required th:value="${detalle.cantidad}"></div>
+                <div class="field"><label for="precioAplicado">Precio aplicado</label><input id="precioAplicado" name="precioAplicado" type="number" min="0" step="0.01" th:value="${detalle.precioAplicado}"><span class="field-hint">Vacío: conserva el precio actual aplicado.</span></div>
+            </div><p class="callout" th:text="|El precio actual del servicio es $ ${servicio.precio}.|">Precio del servicio</p>
+            <div class="form-actions"><a class="btn btn-outline" th:href="@{/citas/{idCita}/servicios(idCita=${cita.idCita})}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar cambios</button></div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

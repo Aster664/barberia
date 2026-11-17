@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Proveedores del producto')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Productos', 'productos', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Abastecimiento · Producto</p><h1 class="page-title" th:text="|Proveedores de ${producto.nombre}|">Proveedores del producto</h1><p class="page-description">Mantén actualizadas las fuentes de abastecimiento.</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/productos/{id}(id=${producto.idProducto})}">Volver al producto</a></div></div>
+        <section class="card table-card">
+            <form class="filter-row" method="post" th:action="@{/productos/{idProducto}/proveedores/asociar(idProducto=${producto.idProducto})}">
+                <div class="field"><label for="idProveedor">Agregar proveedor</label><select id="idProveedor" name="idProveedor" required><option value="">Selecciona un proveedor</option><option th:each="proveedor : ${proveedoresPorId.values()}" th:value="${proveedor.idProveedor}" th:disabled="${#lists.contains(asociaciones.![idProveedor], proveedor.idProveedor)}" th:text="|${proveedor.nombre}${#lists.contains(asociaciones.![idProveedor], proveedor.idProveedor) ? ' · Ya asociado' : ''}|">Proveedor</option></select></div><button class="btn btn-primary btn-small" type="submit">Asociar</button>
+            </form>
+            <div class="table-toolbar"><p th:text="|${#lists.size(asociaciones)} proveedores asociados|">Proveedores</p></div>
+            <div class="table-wrap"><table><thead><tr><th>Proveedor</th><th>Teléfono</th><th>Correo</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="asociacion : ${asociaciones}" th:with="proveedor=${proveedoresPorId[asociacion.idProveedor]}">
+                    <td><a class="table-primary" th:href="@{/proveedores/{id}(id=${proveedor.idProveedor})}" th:text="${proveedor.nombre}">Proveedor</a></td><td th:text="${proveedor.telefono ?: '—'}">Teléfono</td><td th:text="${proveedor.correo ?: '—'}">Correo</td>
+                    <td><form method="post" th:action="@{/productos/{idProducto}/proveedores/{idProveedor}/desasociar(idProducto=${producto.idProducto},idProveedor=${asociacion.idProveedor})}" data-confirm="¿Desasociar este proveedor del producto?"><button class="btn btn-danger btn-small" type="submit">Desasociar</button></form></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(asociaciones)}"><td colspan="4"><div class="empty-state"><strong>Sin proveedores asociados</strong><p>Asocia los proveedores que suministran este producto.</p></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

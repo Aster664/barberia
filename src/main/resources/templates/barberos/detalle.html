@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle del barbero')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Barberos', 'barberos', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Equipo · Ficha</p><h1 class="page-title" th:text="|${barbero.nombres} ${barbero.apellidos}|">Barbero</h1><p class="page-description" th:text="|Profesional #${barbero.idBarbero}|">Ficha profesional</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/barberos}">Volver al equipo</a></div></div>
+        <section class="card form-card">
+            <div class="detail-grid">
+                <div class="detail-item"><span>Documento</span><strong th:text="${barbero.documentoIdentidad}">—</strong></div>
+                <div class="detail-item"><span>Estado</span><strong><span class="badge" th:classappend="| badge-${#strings.toLowerCase(barbero.estado)}|" th:text="${barbero.estado}">ACTIVO</span></strong></div>
+                <div class="detail-item"><span>Teléfono</span><strong th:text="${barbero.telefono ?: '—'}">—</strong></div>
+                <div class="detail-item"><span>Correo</span><strong th:text="${barbero.email ?: '—'}">—</strong></div>
+                <div class="detail-item"><span>Fecha de contratación</span><strong th:text="${barbero.fechaContratacion ?: '—'}">—</strong></div>
+                <div class="detail-item"><span>Comisión</span><strong th:text="${barbero.porcentajeComision != null ? barbero.porcentajeComision + '%' : '—'}">—</strong></div>
+            </div>
+            <div class="detail-actions"><a class="btn btn-primary" th:href="@{/barberos/{id}/editar(id=${barbero.idBarbero})}">Editar ficha</a><a class="btn btn-outline" th:href="@{/barberos/{id}/servicios(id=${barbero.idBarbero})}">Administrar servicios</a><a class="btn btn-outline" th:href="@{/horarios/barbero/{idBarbero}(idBarbero=${barbero.idBarbero})}">Ver horarios</a></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Servicios de la cita')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Citas', 'citas', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Agenda · Detalle de servicios</p><h1 class="page-title" th:text="|Servicios de la cita #${cita.idCita}|">Servicios de la cita</h1><p class="page-description">Administra cantidades y precios aplicados a esta cita.</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/citas/{id}(id=${cita.idCita})}">Volver a la cita</a></div></div>
+        <section class="card table-card">
+            <form class="filter-row" method="post" th:action="@{/citas/{idCita}/servicios/agregar(idCita=${cita.idCita})}">
+                <div class="field"><label for="idServicio">Agregar servicio *</label><select id="idServicio" name="idServicio" required><option value="">Selecciona un servicio</option><option th:each="servicio : ${serviciosPorId.values()}" th:value="${servicio.idServicio}" th:disabled="${#lists.contains(detalles.![idServicio], servicio.idServicio)}" th:text="|${servicio.nombre} · $ ${servicio.precio}${#lists.contains(detalles.![idServicio], servicio.idServicio) ? ' · Ya agregado' : ''}|">Servicio</option></select></div>
+                <div class="field"><label for="cantidad">Cantidad *</label><input id="cantidad" name="cantidad" type="number" min="1" step="1" value="1" required></div>
+                <div class="field"><label for="precioAplicado">Precio aplicado</label><input id="precioAplicado" name="precioAplicado" type="number" min="0" step="0.01"><span class="field-hint">Vacío: utilizar precio actual.</span></div>
+                <button class="btn btn-primary btn-small" type="submit">Agregar</button>
+            </form>
+            <div class="table-toolbar"><p th:text="|${#lists.size(detalles)} servicios incluidos|">Servicios</p><strong th:text="|Total: $ ${total}|">Total</strong></div>
+            <div class="table-wrap"><table><thead><tr><th>Servicio</th><th>Cantidad</th><th>Precio aplicado</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="detalle : ${detalles}" th:with="servicio=${serviciosPorId[detalle.idServicio]}">
+                    <td><span class="table-primary" th:text="${servicio.nombre}">Servicio</span><span class="table-secondary" th:text="|Precio actual $ ${servicio.precio}|">Precio actual</span></td><td th:text="${detalle.cantidad}">1</td><td th:text="|$ ${detalle.precioAplicado}|">Precio</td>
+                    <td><div class="table-actions"><a class="btn btn-outline btn-small" th:href="@{/citas/{idCita}/servicios/{idServicio}/editar(idCita=${cita.idCita},idServicio=${detalle.idServicio})}">Editar</a><form class="inline-form" method="post" th:action="@{/citas/{idCita}/servicios/{idServicio}/eliminar(idCita=${cita.idCita},idServicio=${detalle.idServicio})}" data-confirm="¿Quitar este servicio de la cita?"><button class="btn btn-danger btn-small" type="submit">Quitar</button></form></div></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(detalles)}"><td colspan="4"><div class="empty-state"><strong>Sin servicios asociados</strong><p>Agrega los servicios que se realizarán durante la cita.</p></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

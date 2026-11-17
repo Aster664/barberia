@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Horarios')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Horarios', 'horarios', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Equipo</p><h1 class="page-title">Horarios</h1><p class="page-description" th:text="${barbero != null ? 'Agenda semanal de ' + barbero.nombres + ' ' + barbero.apellidos : 'Configura los bloques semanales de atención por barbero.'}">Disponibilidad semanal</p></div><div class="heading-actions"><a th:if="${barbero != null}" class="btn btn-primary" th:href="@{/horarios/nuevo(idBarbero=${barbero.idBarbero})}">＋ Nuevo horario</a><a th:unless="${barbero != null}" class="btn btn-primary" th:href="@{/horarios/nuevo}">＋ Nuevo horario</a></div></div>
+        <section class="card table-card"><div class="table-toolbar"><p th:text="|${#lists.size(horarios)} bloques de horario|">Horarios</p><a class="btn btn-outline btn-small" th:href="@{/horarios}">Todos los barberos</a></div>
+            <div class="table-wrap"><table><thead><tr><th>Barbero</th><th>Día</th><th>Desde</th><th>Hasta</th><th>Acciones</th></tr></thead><tbody>
+                <tr th:each="horario : ${horarios}">
+                    <td th:text="|${barberosPorId[horario.idBarbero].nombres} ${barberosPorId[horario.idBarbero].apellidos}|">Barbero</td>
+                    <td th:text="${horario.diaSemana == 1 ? 'Lunes' : horario.diaSemana == 2 ? 'Martes' : horario.diaSemana == 3 ? 'Miércoles' : horario.diaSemana == 4 ? 'Jueves' : horario.diaSemana == 5 ? 'Viernes' : horario.diaSemana == 6 ? 'Sábado' : 'Domingo'}">Día</td>
+                    <td th:text="${#temporals.format(horario.horaInicio, 'HH:mm')}">Inicio</td><td th:text="${#temporals.format(horario.horaFin, 'HH:mm')}">Fin</td>
+                    <td><div class="table-actions"><a class="btn btn-outline btn-small" th:href="@{/horarios/{id}/editar(id=${horario.idHorario})}">Editar</a><form class="inline-form" method="post" th:action="@{/horarios/{id}/eliminar(id=${horario.idHorario})}" data-confirm="¿Eliminar este bloque horario?"><button class="btn btn-danger btn-small" type="submit">Eliminar</button></form></div></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(horarios)}"><td colspan="5"><div class="empty-state"><strong>Sin bloques de horario</strong><p>Agrega la disponibilidad semanal de un barbero.</p><a class="btn btn-primary btn-small" th:href="@{/horarios/nuevo}">Crear horario</a></div></td></tr>
+            </tbody></table></div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

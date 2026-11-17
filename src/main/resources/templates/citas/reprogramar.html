@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Reprogramar cita')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Citas', 'citas', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Agenda</p><h1 class="page-title">Reprogramar cita</h1><p class="page-description" th:text="|Cita #${cita.idCita} · conserva cliente y estado actuales.|">Actualizar horario</p></div></div>
+        <form class="card form-card" method="post" th:action="@{/citas/{id}/reprogramar(id=${cita.idCita})}">
+            <h2 class="form-section-title">Nuevo horario</h2><div class="form-grid">
+                <div class="field field-full"><label for="idBarbero">Barbero</label><select id="idBarbero" name="idBarbero"><option value="">Conservar barbero actual</option><option th:each="barbero : ${barberos}" th:value="${barbero.idBarbero}" th:text="|${barbero.nombres} ${barbero.apellidos}|" th:selected="${cita.idBarbero == barbero.idBarbero}">Barbero</option></select></div>
+                <div class="field"><label for="fechaHoraInicio">Nuevo inicio *</label><input id="fechaHoraInicio" name="fechaHoraInicio" type="datetime-local" required th:value="${#temporals.format(cita.fechaHoraInicio, 'yyyy-MM-dd''T''HH:mm')}"></div>
+                <div class="field"><label for="fechaHoraFin">Nuevo fin *</label><input id="fechaHoraFin" name="fechaHoraFin" type="datetime-local" required th:value="${#temporals.format(cita.fechaHoraFin, 'yyyy-MM-dd''T''HH:mm')}"></div>
+            </div><p class="callout">La agenda y la disponibilidad se validan al guardar.</p>
+            <div class="form-actions"><a class="btn btn-outline" th:href="@{/citas/{id}(id=${cita.idCita})}">Cancelar</a><button class="btn btn-primary" type="submit">Guardar nuevo horario</button></div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

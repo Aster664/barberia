@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Detalle del servicio')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: shell('Servicios', 'servicios', ~{::content})}">
+    <main th:fragment="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div class="page-heading"><div><p class="eyebrow">Catálogo · Ficha</p><h1 class="page-title" th:text="${servicio.nombre}">Servicio</h1><p class="page-description" th:text="|Servicio #${servicio.idServicio}|">Ficha de servicio</p></div><div class="heading-actions"><a class="btn btn-outline" th:href="@{/servicios}">Volver al catálogo</a></div></div>
+        <section class="card form-card"><div class="detail-grid">
+            <div class="detail-item"><span>Estado</span><strong><span class="badge" th:classappend="| badge-${#strings.toLowerCase(servicio.estado)}|" th:text="${servicio.estado}">ACTIVO</span></strong></div>
+            <div class="detail-item"><span>Duración</span><strong th:text="|${servicio.duracionMinutos} minutos|">—</strong></div>
+            <div class="detail-item"><span>Precio</span><strong th:text="|$ ${servicio.precio}|">—</strong></div>
+            <div class="detail-item"><span>Descripción</span><strong th:text="${servicio.descripcion ?: 'Sin descripción'}">—</strong></div>
+        </div><div class="detail-actions"><a class="btn btn-primary" th:href="@{/servicios/{id}/editar(id=${servicio.idServicio})}">Editar servicio</a><a class="btn btn-outline" th:href="@{/servicios/{id}/barberos(id=${servicio.idServicio})}">Administrar barberos</a></div></section>
+    </main>
+</div>
+</body>
+</html>
